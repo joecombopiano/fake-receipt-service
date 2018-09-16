@@ -57,24 +57,23 @@ const ITEMS = [
   },
 ]
 
-const getRandomDate = (start, end) => {
-  return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
-}
+const getRandomDate = (start, end) => (new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime())));
+
 
 const generateFakeReceipts = () => {
-  const transactionCount = Math.round(Math.random() * 100);
   const transactions = [];
-  
-  
-  for(let i=0;i<transactionCount; i++){
-    const customer = CUSTOMERS[Math.round(Math.random() * 100 % CUSTOMERS.length)];
-    const transactionID = `${Math.round(Math.random() * 100000 )}`;
+  const transactionCount = Math.floor(Math.random() * 100);
+  for(let i=0; i<transactionCount; i++){
+    const customer = CUSTOMERS[Math.floor(Math.random() * 100 % CUSTOMERS.length)];
+    const transactionID = `${Math.floor(Math.random() * 100000 )}`;
     const transactionDate = getRandomDate(new Date('10/20/2017'), new Date());
     const lineItems = [];
-    
+    const lineItemCount =  Math.floor(Math.random() * 10) || 1;
     let total = 0;
-    for(let j=0; j< Math.round(Math.random() * 10); j++){
-      curentItem = ITEMS[Math.round(Math.random() * 100 % ITEMS.length)];
+
+    for(let j=0; j< lineItemCount; j++){
+      const itemIndex = Math.floor(Math.random() * 100 % ITEMS.length);
+      const currentItem = ITEMS[itemIndex];
       lineItems.push(currentItem);
       total += currentItem.price;
     }
@@ -84,17 +83,14 @@ const generateFakeReceipts = () => {
       "transactionDate": transactionDate,
       "transactionID": transactionID,
       "customer": customer
-    })
+    });
   }
+  return transactions;
 }
-  
-
-
 
 app.get('/receipts', (req, res) => {
-  
-  const receipts = generateFakeReceipts()
-  res.send(receipts);
+  const receipts = generateFakeReceipts();
+  res.send({response: receipts});
 });
 
-app.listen(3000, () => console.log('Example app listening on port 3000!'))
+app.listen(3000, () => console.log('Fake transaction service'));
