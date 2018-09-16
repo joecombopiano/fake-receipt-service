@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require("express");
 const app = express();
 
 const CUSTOMERS = [
@@ -7,8 +7,6 @@ const CUSTOMERS = [
     lastName: "Soze",
     email: "kaizer.soze@email.com",
     phoneNumber: "814-882-1020"
-
-
   },
   {
     firstName: "Rick",
@@ -20,7 +18,6 @@ const CUSTOMERS = [
       state: "Washington",
       zipcode: "98118"
     }
-
   },
   {
     firstName: "Joh",
@@ -31,8 +28,8 @@ const CUSTOMERS = [
     firstName: "Bruce",
     lastName: "Wayne",
     email: "batman@email.com"
-  },
-]
+  }
+];
 
 const ITEMS = [
   {
@@ -54,43 +51,44 @@ const ITEMS = [
     name: "Jacket",
     price: 110,
     sku: "jkl123456"
-  },
-]
+  }
+];
 
-const getRandomDate = (start, end) => (new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime())));
-
+const getRandomDate = (start, end) =>
+  new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
 
 const generateFakeReceipts = () => {
   const transactions = [];
   const transactionCount = Math.floor(Math.random() * 100);
-  for(let i=0; i<transactionCount; i++){
-    const customer = CUSTOMERS[Math.floor(Math.random() * 100 % CUSTOMERS.length)];
-    const transactionID = `${Math.floor(Math.random() * 100000 )}`;
-    const transactionDate = getRandomDate(new Date('10/20/2017'), new Date());
+  for (let i = 0; i < transactionCount; i++) {
+    const customer =
+      CUSTOMERS[Math.floor((Math.random() * 100) % CUSTOMERS.length)];
+    const transactionID = `${Math.floor(Math.random() * 100000000)}`;
+    const transactionDate = getRandomDate(new Date("10/20/2017"), new Date()); //arbitrary dates within the past year
     const lineItems = [];
-    const lineItemCount =  Math.floor(Math.random() * 10) || 1;
+    const lineItemCount = Math.floor(Math.random() * 10) || 1;
     let total = 0;
 
-    for(let j=0; j< lineItemCount; j++){
-      const itemIndex = Math.floor(Math.random() * 100 % ITEMS.length);
+    for (let j = 0; j < lineItemCount; j++) {
+      const itemIndex = Math.floor((Math.random() * 100) % ITEMS.length);
       const currentItem = ITEMS[itemIndex];
       lineItems.push(currentItem);
       total += currentItem.price;
     }
     transactions.push({
-      "lineItems":lineItems,
-      "total": total,
-      "transactionDate": transactionDate,
-      "transactionID": transactionID,
-      "customer": customer
+      lineItems: lineItems,
+      total: total,
+      transactionDate: transactionDate,
+      transactionID: transactionID,
+      customer: customer
     });
   }
   return transactions;
-}
+};
 
-app.get('/receipts', (req, res) => {
+app.get("/receipts", (req, res) => {
   const receipts = generateFakeReceipts();
-  res.send({response: receipts});
+  res.send({ data: receipts });
 });
 
-app.listen(3000, () => console.log('Fake transaction service'));
+app.listen(3000, () => console.log("Fake transaction service"));
